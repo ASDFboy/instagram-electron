@@ -1,7 +1,8 @@
-﻿{
+{
   "name": "instagram-desktop",
   "version": "1.0.0",
   "main": "main.js",
+  "author": "ASDFboy and Claude (Anthropic)",
   "scripts": { "start": "electron .", "dist": "electron-packager . Instagram --platform=win32 --arch=x64 --out=dist --overwrite" },
   "devDependencies": { "electron": "^33.0.0", "@electron/packager": "^18.3.0" }
 }

@@ -35,6 +35,10 @@ Some Windows graphics drivers make Electron's GPU process crash on startup. Chro
 - `--disable-gpu-sandbox` - on the machine this was tested on, this cut the crashes from several to one at startup, after which it stayed up. It weakens a Chromium security sandbox, so use it only if you need it.
 - `--disable-gpu` - no crashes, software rendering only.
 
+## Credits
+
+Created by **ASDFboy** ([@ASDFboy](https://github.com/ASDFboy)) and **Claude** (Anthropic).
+
 ## Disclaimer
 
 Unofficial, not affiliated with or endorsed by Meta or Instagram. It loads the public website and does not use Instagram's private APIs; it injects CSS and blocks some telemetry requests. Use at your own risk and follow Instagram's Terms of Use.
