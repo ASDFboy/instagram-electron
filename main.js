@@ -2,7 +2,6 @@
 
 // Lower resource use: software-heavy features off, smaller caches
 app.commandLine.appendSwitch('disable-features', 'HardwareMediaKeyHandling,MediaSessionService');
-app.commandLine.appendSwitch('js-flags', '--max-old-space-size=512');
 app.commandLine.appendSwitch('autoplay-policy', 'user-gesture-required'); // no autoplay videos
 
 // Cut CPU/GPU cost: no animations or transitions, no blur filters
@@ -15,7 +14,10 @@ const BLOCK = ['*://*.facebook.com/tr*', '*://*/ajax/bz*', '*://*/logging/*',
 
 app.whenReady().then(() => {
   const ses = session.fromPartition('persist:instagram'); // keeps you logged in
-  ses.webRequest.onBeforeRequest({ urls: BLOCK }, (_, cb) => cb({ cancel: true }));
+  ses.webRequest.onBeforeRequest({ urls: BLOCK }, (d, cb) => {
+    if (process.env.IG_DEBUG) console.log('BLOCKED', d.url.slice(0, 120));
+    cb({ cancel: true });
+  });
 
   const win = new BrowserWindow({
     width: 1200, height: 850, autoHideMenuBar: true, title: 'Instagram', icon: require('fs').existsSync(__dirname + '/icon.ico') ? __dirname + '/icon.ico' : undefined,
@@ -27,8 +29,9 @@ app.whenReady().then(() => {
 
   // Keep instagram in-app, open everything else in the real browser
   win.webContents.setWindowOpenHandler(({ url }) => {
-    if (!/^https:\/\/([\w-]+\.)?instagram\.com\//.test(url)) shell.openExternal(url);
-    return { action: /instagram\.com/.test(url) ? 'allow' : 'deny' };
+    const inApp = /^https:\/\/([\w-]+\.)?instagram\.com\//.test(url);
+    if (!inApp) shell.openExternal(url);
+    return { action: inApp ? 'allow' : 'deny' };
   });
 
   // Free memory when minimized: pause rendering and drop audio
